@@ -1,7 +1,5 @@
 package br.com.im9.pdf.endpoints;
 
-import java.util.HashMap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -39,7 +37,6 @@ public class PDFController {
             .body(resource);
         } catch (Exception e) {
             e.printStackTrace();
-            HashMap<String, String> response = new HashMap<>();
             return ResponseEntity
                 .internalServerError()
                 .body(null);
