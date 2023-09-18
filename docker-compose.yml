@@ -1,0 +1,10 @@
+version: '3'
+
+
+services:
+  pdf:
+    build:
+      context: pdf\
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
