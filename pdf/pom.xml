@@ -14,9 +14,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>IM9 PDF processor</name>
 	<description>PDF Generator</description>
-	<properties>
-		<java.version>20</java.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
