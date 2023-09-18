@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>br.com.im9</groupId>
 	<artifactId>pdf</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-RC</version>
 	<name>IM9 PDF processor</name>
 	<description>PDF Generator</description>
 	<dependencies>
