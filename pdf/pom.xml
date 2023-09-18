@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>br.com.im9</groupId>
 	<artifactId>pdf</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-RC</version>
 	<name>IM9 PDF processor</name>
 	<description>PDF Generator</description>
 	<dependencies>
@@ -32,6 +32,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>pdf_generator</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -49,9 +50,9 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-						  <mainClass>br.com.im9.pdf.Im9PdfProcessorApplication</mainClass>
+							<mainClass>br.com.im9.pdf.Im9PdfProcessorApplication</mainClass>
 						</manifest>
-					  </archive>
+					</archive>
 				</configuration>
 			</plugin>
 			<plugin>
