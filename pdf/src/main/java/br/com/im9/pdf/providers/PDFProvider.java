@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import com.itextpdf.commons.utils.Base64;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.events.PdfDocumentEvent;
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -20,8 +22,9 @@ import com.itextpdf.layout.properties.BorderRadius;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
-
+import com.itextpdf.layout.properties.VerticalAlignment;
 import br.com.im9.pdf.structures.PDFPayload;
+import br.com.im9.pdf.structures.events.PDFPageDetailsEvent;
 
 public class PDFProvider {
 
@@ -61,7 +64,7 @@ public class PDFProvider {
 	public static Image getImage(byte[] bytes) {
 		Image img = new Image(ImageDataFactory.create(bytes))
 				.scale(0.25f, 0.25f)
-				.setHorizontalAlignment(HorizontalAlignment.CENTER);
+				.setHorizontalAlignment(HorizontalAlignment.LEFT);
 		return img;
 	}
 
@@ -72,9 +75,10 @@ public class PDFProvider {
 	public static Paragraph getTitle(String content) {
 		return new Paragraph(content)
 				.setBold()
-				.setFontSize(getHeaderFontSize()+0.5f)
+				.setFontSize(getHeaderFontSize() + 1.5f)
 				.setPaddingLeft(1.25f)
-				.setHorizontalAlignment(HorizontalAlignment.LEFT);
+				.setWidth(UnitValue.createPercentValue(100f))
+				.setTextAlignment(TextAlignment.CENTER);
 	}
 
 	public static Paragraph getDescription(String content) {
@@ -84,20 +88,56 @@ public class PDFProvider {
 				.setHorizontalAlignment(HorizontalAlignment.LEFT);
 	}
 
+	public static Table getHeader(String title, String description, String logo) {
+		return getTable(3)
+				.setMarginTop(15f)
+				.addCell(
+
+						new Cell()
+						.add(
+							getImage(logo)		
+							.setHorizontalAlignment(HorizontalAlignment.CENTER)					
+							)
+						.setHorizontalAlignment(HorizontalAlignment.CENTER)					
+						.setVerticalAlignment(VerticalAlignment.MIDDLE)
+						.setWidth(UnitValue.createPercentValue(33))
+						.setBorder(Border.NO_BORDER)
+				)
+
+				.addCell(
+						new Cell()
+							.add(
+								getTitle(title)
+						)
+						.setVerticalAlignment(VerticalAlignment.MIDDLE)
+						.setWidth(UnitValue.createPercentValue(33))
+						.setBorder(Border.NO_BORDER)
+				)
+				.addCell(
+						new Cell()
+						.add(
+							getDescription(description)
+						)
+						.setVerticalAlignment(VerticalAlignment.MIDDLE)
+						.setWidth(UnitValue.createPercentValue(33))
+						.setBorder(Border.NO_BORDER))
+				.setWidth(UnitValue.createPercentValue(100));
+	}
+
 	public static byte[] generatePDF(PDFPayload pdfData) {
 		logger.debug("Starting PDF generation process");
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		PdfDocument pdfDocument = new PdfDocument(new PdfWriter(os));
+		Table header = getHeader(pdfData.title, pdfData.description, pdfData.logo);
 
+		pdfDocument.addEventHandler(PdfDocumentEvent.START_PAGE, new PDFPageDetailsEvent(header));
+		pdfDocument.setDefaultPageSize(PageSize.A4.rotate());
 		Document document = new Document(pdfDocument);
+		document.setTopMargin(125f);
+
 		document.setFontSize(7);
 
 		logger.debug("Including heading");
-
-		document.add(getImage(pdfData.logo));
-		document.add(getTitle(pdfData.title));
-		document.add(getDescription(pdfData.description));
-
 
 		logger.debug("Creating table");
 		Table table = getTable(pdfData.headers.size());
@@ -105,7 +145,6 @@ public class PDFProvider {
 		pdfData.headers.forEach((h) -> {
 			table.addHeaderCell(getHeaderCell(h));
 		});
-
 
 		document.add(table);
 		logger.debug("Adding rows");
