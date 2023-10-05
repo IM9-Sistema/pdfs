@@ -1,0 +1,22 @@
+name: Build Container CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths: 
+      - pdf/**
+      - docker-compose.yml
+
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Create env
+      run: mv src/envs/.env.ci src/envs/.env
+    - name: Build the Docker image
+      run: docker build . --file pdf/Dockerfile --tag my-image-name:$(date +%s)
