@@ -29,6 +29,11 @@
 			<artifactId>kernel</artifactId>
 			<version>8.0.1</version>
 		</dependency>
+		<dependency>
+			<groupId>co.elastic.apm</groupId>
+			<artifactId>apm-agent-attach</artifactId>
+			<version>1.48.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
