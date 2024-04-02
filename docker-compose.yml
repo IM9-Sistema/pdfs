@@ -6,5 +6,7 @@ services:
     build:
       context: pdf/
       dockerfile: Dockerfile
+    env_file:
+      - envs/elastic.env
     ports:
       - 8080:8080
